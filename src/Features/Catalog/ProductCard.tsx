@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import agent from '../../App/Api/Agent';
 import { useStoreContext } from '../../App/Context/StoreContext';
 import { Product } from '../../App/Models/product';
+import { currencyFormat } from '../../App/Util/Util';
 interface Props {
     product: Product;
 }
@@ -37,7 +38,7 @@ export default function ProductCard({product}: Props){
       />
       <CardContent>
         <Typography gutterBottom  color = "secondary" variant="h5">
-          ${(product.price / 100 ).toFixed(2)}
+          {currencyFormat(product.price)}
         </Typography>
         <Typography variant="body2" color="text.secondary">
         {product.brand} / {product.type}
@@ -46,7 +47,7 @@ export default function ProductCard({product}: Props){
       <CardActions>
         <LoadingButton 
           loading={loading} 
-          onClick={()=>handleAddItem(product.id) } 
+          onClick={()=>handleAddItem(product.id)} 
           size="small">Add to cart
         </LoadingButton>
         <Button component={Link} to={`/catalog/${product.id}`} size="small">View</Button>

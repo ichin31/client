@@ -69,8 +69,9 @@ const TestErrors = {
 
 const Basket = {
   get: () => req.get('basket'),
-  addItem: (productId:number,quantity =1) => req.post(`basket?productId=${productId}&quantity=${quantity}`,{}),
-  removeItem: (productId:number,quantity =1) => req.delete(`basket?productId=${productId}&quantity=${quantity}`),
+  // addItem: (productId:number, quantity =1) => req.post(`basket?productId=${productId}&quantity=${quantity}`, {}),
+  addItem: (productId: number, quantity = 1) => req.post(`basket?productId=${productId}&quantity=${quantity}`, {}),
+  removeItem: (productId:number, quantity =1) => req.delete(`basket?productId=${productId}&quantity=${quantity}`)
 
 }
 

@@ -32,7 +32,6 @@ const navStyles = {
 export default function Header({darkMode,handleThemeChange}: Props) {
   const {basket} =  useStoreContext();
   const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0)
-  const itemCoun = basket?.items.reduce((sum, item) => sum + item.quantity, 0)
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static"  sx={{mb:4}}>
@@ -59,7 +58,7 @@ export default function Header({darkMode,handleThemeChange}: Props) {
          
           <Box display='flex' alignItems='center'>
             <IconButton component={Link} to='/basket'  size ='large' sx={{color: 'inherit'}}>
-              <Badge badgeContent ={itemCoun} color='secondary'>
+              <Badge badgeContent ={itemCount} color='secondary'>
                 <ShoppingCart/>
               </Badge>
             </IconButton>

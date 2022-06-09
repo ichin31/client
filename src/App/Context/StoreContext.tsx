@@ -4,7 +4,7 @@ import { Basket } from "../Models/basket";
 interface StoreContextValue{
     basket: Basket | null;
     setBasket :(basket:Basket) => void;
-    removeItem:(productId:number,quantity:number)=> void;
+    removeItem:(productId:number, quantity:number)=> void;
 }
 
 export const StoreContext = createContext<StoreContextValue | undefined>(undefined);

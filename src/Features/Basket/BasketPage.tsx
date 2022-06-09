@@ -1,6 +1,7 @@
 import { Add, Delete, Remove } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { Box, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import {Link} from "react-router-dom"
 import { useState } from "react";
 import agent from "../../App/Api/Agent";
 import { useStoreContext } from "../../App/Context/StoreContext";
@@ -73,7 +74,7 @@ function handleRemoveItem(productId: number, quantity = 1 , name:string){
                   <Add />
                 </LoadingButton>
               </TableCell>
-              <TableCell align="right">{currencyFormat(item.price)}</TableCell>
+              <TableCell align="right">{currencyFormat(item.price * item.quantity)}</TableCell>
               <TableCell align="right">
                 <LoadingButton  
                 loading={status.loading  && status.name === 'delete' + item.productId}
@@ -92,6 +93,17 @@ function handleRemoveItem(productId: number, quantity = 1 , name:string){
       <Grid item xs={6}/>
       <Grid>
             <BasketSummary/>
+             <Button 
+              component={Link}
+              to='/checkout'
+              variant='contained'
+              size='large'
+              fullWidth
+            >
+              Checkout
+            </Button> 
+
+
       </Grid>
     </Grid>
 

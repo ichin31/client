@@ -4,7 +4,12 @@ import App from './App/Layout/App';
 import reportWebVitals from './reportWebVitals';
 import { Router } from 'react-router-dom';
 import { createBrowserHistory } from "history";
-import { StoreProvider } from "./App/Context/StoreContext";
+import { Provider } from 'react-redux';
+import { store } from './App/Store/ConfigureStore';
+
+
+
+
 
 export const history = createBrowserHistory();
 
@@ -16,9 +21,9 @@ root.render(
   // Removing StrictMode as I need to upgrade to react-router-dom-V5 to V6 to work with React V18
   // https://stackoverflow.com/questions/69931556/react-router-dom-link-change-the-url-but-it-doesnt-render-the-component-in-rect
     <Router history={history}>
-      <StoreProvider>
+      <Provider store={store}>
         <App />
-     </StoreProvider>
+      </Provider>
     </Router>
 );
 

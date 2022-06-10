@@ -1,9 +1,10 @@
 import { Backdrop, Box, CircularProgress, Typography } from '@mui/material'
-import React from 'react'
 
-interface Props {
-    message?:string;
-}
+
+// interface Props {
+//     message?:string;
+// }
+
 
 export default function LoadingComponents({message = 'Loading...'}) {
   return (

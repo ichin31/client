@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { history } from "../..";
 
-// const sleep = () => new Promise(resolve => setTimeout(resolve, 50));
+ const sleep = () => new Promise(resolve => setTimeout(resolve, 1000));
 
 axios.defaults.baseURL = 'http://localhost:5000/api/';
 axios.defaults.withCredentials = true; //needed for cors make sure its added to startup file
@@ -11,7 +11,7 @@ axios.defaults.withCredentials = true; //needed for cors make sure its added to 
 const resBody = (res: AxiosResponse) => res.data; 
 
 axios.interceptors.response.use(async res => {
-  // await sleep();
+  await sleep();
   return res
 }, (error:AxiosError) =>{
   // needed to but the error.response as any for typescript 
@@ -47,15 +47,16 @@ axios.interceptors.response.use(async res => {
 )
 
 const req = {
-  get: (url:string) => axios.get(url).then(resBody),
+  get: (url:string, params?: URLSearchParams) => axios.get(url, {params}).then(resBody),
   post: (url:string, body:{}) => axios.post(url,body).then(resBody),
   put: (url:string, body:{}) => axios.put(url,body).then(resBody),
   delete: (url:string) => axios.delete(url).then(resBody)
 }
 
 const Catalog = {
-  list: () => req.get('product'),
+  list: (params: URLSearchParams) => req.get('product', params),
   details:(id:number) => req.get(`product/${id}`),
+  fetchFilters: () => req.get(`product/filters`),
 }
 
 const TestErrors = {
@@ -69,8 +70,8 @@ const TestErrors = {
 
 const Basket = {
   get: () => req.get('basket'),
-  // addItem: (productId:number, quantity =1) => req.post(`basket?productId=${productId}&quantity=${quantity}`, {}),
-  addItem: (productId: number, quantity = 1) => req.post(`basket?productId=${productId}&quantity=${quantity}`, {}),
+  // addItem: (productId:number, quantity = 1) => req.post(`basket?productId=${productId}&quantity=${quantity}`, {}),
+  addItem: (productId:number, quantity = 1) => req.post(`basket?productId=${productId}&quantity=${quantity}`, {}),
   removeItem: (productId:number, quantity =1) => req.delete(`basket?productId=${productId}&quantity=${quantity}`)
 
 }

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import agent from "../../App/Api/Agent";
+import { MetaData } from "../../App/Models/pagination";
 import { Product, ProductParams } from "../../App/Models/product";
 import { RootState } from "../../App/Store/ConfigureStore";
 
@@ -11,6 +12,7 @@ interface CatalogState {
   brands:string[];
   types:string[];
   productParams: ProductParams;
+  metaData: MetaData | null;
 
 }
 
@@ -34,7 +36,9 @@ export const fetchProductsAsync = createAsyncThunk<Product[], void, {state: Root
     async (_, thunkAPI ) => {
       const params = getAxiosParams(thunkAPI.getState().catalog.productParams)
         try {
-            return await agent.Catalog.list(params);
+            const response =  await agent.Catalog.list(params);
+            thunkAPI.dispatch(setMetaData(response.metaData))
+            return response.items
         } catch (error:any) {
             return thunkAPI.rejectWithValue({error: error.data})
         }
@@ -79,17 +83,21 @@ export const catalogSlice = createSlice({
         status:'idle',
         brands:[],
         types: [],
-        productParams: initParams()
+        productParams: initParams(),
+        metaData:null
     }),
     reducers: {
         setProductParams:(state,action) => {
           state.productsLoaded= false;
           state.productParams = {...state.productParams, ...action.payload};
         },
+        setMetaData:(state,action) =>{
+          state.metaData= action.payload
+        },
         resetProductParams:(state) => {
           state.productParams = initParams();
-
         }
+
     }, 
     extraReducers:(builder => {
         // All Products
@@ -136,4 +144,4 @@ export const catalogSlice = createSlice({
 })
 
 export const productSelectors = productsAdapter.getSelectors((state: RootState) => state.catalog)
-export const {setProductParams, resetProductParams} = catalogSlice.actions;
+export const {setProductParams, resetProductParams, setMetaData} = catalogSlice.actions;

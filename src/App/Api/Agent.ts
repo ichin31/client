@@ -1,8 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { history } from "../..";
+import { PaginatedResponse } from "../Models/pagination";
 
- const sleep = () => new Promise(resolve => setTimeout(resolve, 1000));
+ const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
 
 axios.defaults.baseURL = 'http://localhost:5000/api/';
 axios.defaults.withCredentials = true; //needed for cors make sure its added to startup file
@@ -12,6 +13,13 @@ const resBody = (res: AxiosResponse) => res.data;
 
 axios.interceptors.response.use(async res => {
   await sleep();
+  // console.log(res)
+  const pagination = res.headers['pagination'];
+  if(pagination){
+    res.data = new PaginatedResponse(res.data, JSON.parse(pagination))
+    // console.log(res)
+    return res
+  }
   return res
 }, (error:AxiosError) =>{
   // needed to but the error.response as any for typescript 

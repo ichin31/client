@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { accountSlice } from "../../Features/Account/AccountSlice";
 import { basketSlice } from "../../Features/Basket/BasketSlice";
 import { catalogSlice } from "../../Features/Catalog/CatalogSlice";
 import { CounterSlice } from "../../Features/Contact/CounterSlice"
@@ -9,7 +10,8 @@ export const store = configureStore({
   reducer:{
     counter: CounterSlice.reducer,
     basket: basketSlice.reducer,
-    catalog: catalogSlice.reducer
+    catalog: catalogSlice.reducer,
+    account: accountSlice.reducer
   }
 })
 

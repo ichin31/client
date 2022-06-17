@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@emotion/react';
 import { createTheme, CssBaseline,Container } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Route, Switch } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 import AboutPage from '../../Features/About/AboutPage';
@@ -13,29 +13,30 @@ import 'react-toastify/dist/ReactToastify.css';
 import ServerError from '../Errors/ServerError';
 import NotFound from '../Errors/NotFound';
 import BasketPage from '../../Features/Basket/BasketPage';
-import { getCookie } from '../Util/Util';
-import agent from '../Api/Agent';
 import LoadingComponents from './LoadingComponents';
 import CheckoutPage from '../../Features/Checkout/CheckoutPage';
 import { useAppDispatch } from '../Store/ConfigureStore';
-import { setBasket } from '../../Features/Basket/BasketSlice';
+import { fetchBasketAsync } from '../../Features/Basket/BasketSlice';
+import Login from '../../Features/Account/Login';
+import Register from '../../Features/Account/Register';
+import { fetchCurrentUser } from '../../Features/Account/AccountSlice';
+import PrivateRoute from './PrivateRoute';
 
 function App() {
   const dispatch = useAppDispatch();
   const [loading , setLoading] =  useState(true);
+  const initApp =  useCallback(async () =>  {
+    try{
+      await dispatch(fetchCurrentUser())
+      await dispatch(fetchBasketAsync())
+    } catch (error){
+      console.log(error)
+    }
+  }, [dispatch])
 
   useEffect(() => {
-    const buyerId = getCookie('buyerId')
-    if (buyerId){
-      agent.Basket.get()
-      .then(basket => dispatch(setBasket(basket)))
-      .catch(error =>console.log(error))
-      .finally(()=> setLoading(false));
-    } else {
-      setLoading(false);
-    }
-
-  }, [dispatch])
+    initApp().then(()=> setLoading(false))
+  }, [initApp])
   
   const [darkMode, setDarkMode]= useState(false);
   const paletteType = darkMode ? 'dark' : 'light'
@@ -69,7 +70,9 @@ function App() {
             <Route path='/contact' component={ContactPage}/>
             <Route path='/server-error' component={ServerError}/>
             <Route path='/basket' component={BasketPage}/>
-            <Route path='/checkout' component={CheckoutPage}/>
+            <PrivateRoute path='/checkout' component={CheckoutPage} />
+            <Route path='/login' component={Login}/>
+            <Route path='/register' component={Register}/>
             <Route component={NotFound}/>
           </Switch>
         </Container>
